@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<meta charset="UTF-8">
+<title>List of all employees</title>
+</head>
+<body>
+
+	<div th:insert="/index.html">...</div>
+	<hr>
+	
+	<form action="/showInfoAboutEmployee" method="Get">
+		<select name="employeeId" id="employeeId">
+			<option value="">Select employee</option>
+			<option th:each="Employee : ${employeesList}"
+				th:value="${Employee.employeeId}"
+				th:text="${Employee.name}+' : '+${Employee.surname}+' : '+${Employee.dateOfBirth}">
+			</option>
+		</select> <input type="submit" value="Show">Show info about this employee <br>
+	</form>
+
+	<hr>
+
+<h2> Find employee by :</h2>
+<form action="/findEmployee" method="Post">
+<input type="text" name="searchKey" ><br>
+<input type="radio" name="searchBy" value="surname" required="required">Surname<br>
+<input type="radio" name="searchBy" value="country" required="required">Country<br>
+<input type="radio" name="searchBy" value="city" required="required">City<br>
+<input type="radio" name="searchBy" value="employer" required="required">Employer<br>
+
+
+<select name="searchKey" id="position" >
+			<option value="">Select position</option>
+			<option th:each="position : ${positions}"
+				th:value="${position}"
+				th:text="${position}" ></option>
+			</select>
+
+<input type="radio" name="searchBy" value="position" required="required">Position<br>
+<input type="submit" value="Search"><br>
+</form>
+<hr>
+
+	<div>
+		<h1>List of all employees</h1>
+
+		<table class="steelBlueCols">
+			<tr>
+				<th>employee ID</th>
+				<th>Name</th>
+				<th>Surname</th>
+				<th>Employer</th>
+
+			</tr>
+
+			<tr th:each="employee: ${employeesList}">
+				<td><a
+					th:href="@{'/showInfoAboutEmployee' + '?employeeId=' + ${employee.employeeId}}"
+					th:text="${employee.employeeId}"></a></td>
+				<td th:text="${employee.name}"></td>
+				<td th:text="${employee.surname}"></td>
+				<td th:if="${employee.employer!=null}"  th:text="${employee.employer.name}"></td>
+				<td th:if="${employee.employer==null}"></td>
+				
+				<td><form
+						th:action="@{'/removeEmployee/' +${employee.employeeId}}"
+						th:method="POST">
+						<input type="submit" value="remove">
+					</form></td>
+			</tr>	
+		</table>
+	</div>
+
+<hr>
+
+
+</body>
+</html>

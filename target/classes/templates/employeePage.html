@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<meta charset="UTF-8">
+<title>Employee page</title>
+
+<script type="text/javascript">
+function showEmployeeEditForm() {
+	var div = document.getElementById('changeEmployeeDetailsForm');	
+			div.style.display="block";	
+	}
+function closeEmployeeEditForm(){
+	var div = document.getElementById('changeEmployeeDetailsForm');	
+	div.style.display="none";
+}
+</script>
+</head>
+<body>
+
+	<div th:insert="/index.html">...</div>
+	<br>
+
+	<div th:if="${employee}">
+		<table class="steelBlueCols">
+			>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Surname</th>
+				<th>Date of birth</th>
+				<th>City</th>
+				<th>Country</th>
+				<th>Employer</th>
+				<th>Position</th>
+				<th>Wage</th>
+			</tr>
+			<tr>
+				<td th:text="${employee.employeeId}"></td>
+				<td th:text="${employee.name}"></td>
+				<td th:text="${employee.surname}"></td>
+				<td th:text="${employee.dateOfBirth}"></td>
+				<td th:text="${employee.city}"></td>
+				<td th:text="${employee.country}"></td>
+				<td th:if="${employee.employer!=null}">
+				<a th:href="@{'/showInfoAboutEmployer' + '?employerId=' + ${employee.employer.employerId}}" th:text="${employee.employer.name}"></a></td>
+				<td th:if="${employee.employer==null}"></td>
+				<td th:text="${employee.position}"></td>
+				<td th:text="${employee.wage}"></td>
+		</table>
+		
+		<hr>
+<input type="button" name="answer" value="Show employee edit form" onclick="showEmployeeEditForm()" ondblclick="closeEmployeeEditForm()">
+<div style="display:none" id="changeEmployeeDetailsForm">
+		<h2>Change details about employee</h2>
+		<form action="" method="POST">
+			<input type="text" name="name"> Edit name <br>
+			 <input
+				type="text" name="surname"> Edit surname <br>
+			<input type="date" name="dateOfBirth"> Edit date of birth <br>
+			<input type="text" name="city"> Edit city <br> 
+			<input type="text" name="country">Edit country <br>
+			<input type="text" name="typeOfBusiness">Edit types of business <br>
+			<input type="text" name="wage" required="required" >Edit wage<br>
+			
+			<select name="employerId" id="employerId"  required="required">
+			<option value="">Select employer</option>
+			<option th:each="employer : ${employersList}"
+				th:value="${employer.employerId}"
+				th:text="${employer.name}+' : '+${employer.employerId}" ></option>
+			</select>
+			<br>
+			<select name="positionEnum" id="positionEnum"  required="required">
+			<option value="">Select position</option>
+			<option th:each="position : ${positions}"
+				th:value="${position}"
+				th:text="${position}" ></option>
+			</select>
+					
+			<input type="text" name="employeeId" th:field="${employee.employeeId}" hidden="hidden"> 
+			<input type="submit" value="update">
+		</form>
+
+	</div>
+</body>
+</html>
